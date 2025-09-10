@@ -16,12 +16,12 @@ Checkout package.json for scripts and other miscellaneous configs.
 
 ## Locally
 
-> All biome checks must pass locally!
-> The app must build!
+> All biome checks must pass locally!\
+> The app must build!\
 > The app will be formatted pre-commit!
 
 ## North
 
-> Must open a PR!
-> All PRs must be reviewed before merge!
+> Must open a PR!\
+> All PRs must be reviewed before merge!\
 > All PRs must pass all checks!
