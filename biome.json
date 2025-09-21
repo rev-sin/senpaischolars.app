@@ -1,37 +1,49 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
+  "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": false },
   "files": {
-    "ignoreUnknown": true,
-    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "space",
-    "indentWidth": 2
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "suspicious": {
-        "noUnknownAtRules": "off"
-      }
-    },
-    "domains": {
-      "next": "recommended",
-      "react": "recommended"
-    }
+    "ignoreUnknown": false
   },
   "assist": {
     "actions": {
       "source": {
         "organizeImports": "on"
       }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "useEditorconfig": false,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 80,
+    "attributePosition": "multiline",
+    "bracketSpacing": true,
+    "includes": ["src/**/*.ts", "src/**/*.tsx", "!src/**/*.css"]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "nursery": {
+        "useSortedClasses": "off"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "all",
+      "semicolons": "always",
+      "arrowParentheses": "always",
+      "bracketSameLine": false,
+      "quoteStyle": "single",
+      "attributePosition": "multiline",
+      "bracketSpacing": true,
+      "lineWidth": 80
     }
   }
 }
