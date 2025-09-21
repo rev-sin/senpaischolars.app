@@ -37,10 +37,11 @@ model Content {
   createdAt DateTime @default(now())
   contentId String?
 
-  CourseContent CourseContent[]
-  Bookmarks     Bookmarks[]
-  VideoProgress VideoProgress[]
-  VideoMetadata VideoMetadata[]
+  ContentPurchases UserContentPurchases[]
+  CourseContent    CourseContent[]
+  Bookmarks        Bookmarks[]
+  VideoProgress    VideoProgress[]
+  VideoMetadata    VideoMetadata[]
 }
 
 model CourseContent {

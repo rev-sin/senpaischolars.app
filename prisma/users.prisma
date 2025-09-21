@@ -21,7 +21,8 @@ model Profile {
 
   Bookmarks          Bookmarks[]
   Certificate        Certificate[]
-  UserPurchases      UserPurchases[]
+  CoursePurchases    UserCoursePurchases[]
+  ContentPurchases   UserContentPurchases[]
   PaymentTransaction PaymentTransaction[]
   VideoProgress      VideoProgress[]
   Favourites         Favourites[]
@@ -39,10 +40,11 @@ model Bookmarks {
   @@unique([userId, contentId])
 }
 
-model UserPurchases {
+model UserCoursePurchases {
   userId       String
   courseId     String
   registeredAt DateTime @default(now())
+  validTill    DateTime
 
   user   Profile @relation(fields: [userId], references: [id])
   course Course  @relation(fields: [courseId], references: [id])
@@ -50,6 +52,18 @@ model UserPurchases {
   @@id([userId, courseId])
   @@index([userId])
   @@index([courseId])
+}
+
+model UserContentPurchases {
+  userId       String
+  contentId    String
+  registeredAt DateTime @default(now())
+  validTill    DateTime
+
+  user    Profile @relation(fields: [userId], references: [id])
+  content Content @relation(fields: [contentId], references: [id])
+
+  @@id([userId, contentId])
 }
 
 model VideoProgress {
