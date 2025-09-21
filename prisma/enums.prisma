@@ -6,7 +6,29 @@ enum Role {
 }
 
 enum PublishStatus {
-  DRAFT 
+  DRAFT
   PUBLISHED
   ARCHIVED
+}
+
+enum PaymentType {
+  FULL_COURSE
+  CONTENT_RENTAL
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum ApplicableTo {
+  COURSE
+  CONTENT
+  ALL
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
 }

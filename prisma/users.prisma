@@ -8,19 +8,23 @@ model Onboarding {
 }
 
 model Profile {
-  id              String          @id @default(uuid())
-  email           String          @unique
+  id              String   @id @default(uuid())
+  email           String   @unique
   password        String?
   oAuthProvider   String
   oAuthProviderId String
   fullName        String
-  role            Role            @default(SCHOOL_STUDENT)
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  Bookmarks       Bookmarks[]
-  Certificate     Certificate[]
-  UserPurchases   UserPurchases[]
-  VideoProgress   VideoProgress[]
+  role            Role     @default(SCHOOL_STUDENT)
+  disableDRM      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  Bookmarks          Bookmarks[]
+  Certificate        Certificate[]
+  UserPurchases      UserPurchases[]
+  PaymentTransaction PaymentTransaction[]
+  VideoProgress      VideoProgress[]
+  Favourites         Favourites[]
 }
 
 model Bookmarks {

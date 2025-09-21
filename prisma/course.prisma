@@ -14,6 +14,9 @@ model Course {
   CourseContent CourseContent[]
   UserPurchases UserPurchases[]
   Certificate   Certificate[]
+  Favourites    Favourites[]
+
+  discounts Discount[] @relation("DiscountCourses")
 }
 
 model Content {
@@ -30,7 +33,6 @@ model Content {
   parentId           String?
   parent             Content?  @relation("ContentToContent", fields: [parentId], references: [id])
   children           Content[] @relation("ContentToContent")
-  commentsInt        Int       @default(0)
 
   createdAt DateTime @default(now())
   contentId String?
@@ -69,6 +71,15 @@ model VideoMetadata {
   updatedAt DateTime @updatedAt
 
   content Content @relation(fields: [contentId], references: [id])
+}
+
+model Favourites {
+  id       Int    @id @default(autoincrement())
+  userId   String
+  courseId String
+
+  user   Profile @relation(fields: [userId], references: [id])
+  course Course  @relation(fields: [courseId], references: [id])
 }
 
 model Certificate {
