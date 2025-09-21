@@ -1,49 +1,49 @@
-"use client";
+'use client';
 
-import { Lock, Users } from "lucide-react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { Lock, Users } from 'lucide-react';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
 
 const featuredCourses = [
   {
     id: 1,
-    title: "Graph Theory & Algorithms",
-    instructor: "Prof. Rahul Sharma",
+    title: 'Graph Theory & Algorithms',
+    instructor: 'Prof. Rahul Sharma',
     rating: 4.9,
     students: 12450,
-    duration: "30 hours",
-    image: "https://picsum.photos/600/400?random=10",
-    level: "Intermediate",
+    duration: '30 hours',
+    image: 'https://picsum.photos/600/400?random=10',
+    level: 'Intermediate',
   },
   {
     id: 2,
-    title: "Operating Systems Fundamentals",
-    instructor: "Dr. Priya Verma",
+    title: 'Operating Systems Fundamentals',
+    instructor: 'Dr. Priya Verma',
     rating: 4.8,
     students: 10820,
-    duration: "42 hours",
-    image: "https://picsum.photos/600/400?random=11",
-    level: "Beginner",
+    duration: '42 hours',
+    image: 'https://picsum.photos/600/400?random=11',
+    level: 'Beginner',
   },
   {
     id: 3,
-    title: "Embedded Systems Design",
-    instructor: "Dr. Ankit Gupta",
+    title: 'Embedded Systems Design',
+    instructor: 'Dr. Ankit Gupta',
     rating: 4.9,
     students: 9520,
-    duration: "50 hours",
-    image: "https://picsum.photos/600/400?random=12",
-    level: "Advanced",
+    duration: '50 hours',
+    image: 'https://picsum.photos/600/400?random=12',
+    level: 'Advanced',
   },
   {
     id: 4,
-    title: "Computer Networks & Security",
-    instructor: "Prof. Meera Iyer",
+    title: 'Computer Networks & Security',
+    instructor: 'Prof. Meera Iyer',
     rating: 4.7,
     students: 8700,
-    duration: "38 hours",
-    image: "https://picsum.photos/600/400?random=13",
-    level: "Intermediate",
+    duration: '38 hours',
+    image: 'https://picsum.photos/600/400?random=13',
+    level: 'Intermediate',
   },
 ];
 
@@ -61,7 +61,10 @@ export default function FeaturedCourses() {
               sharing, and detailed analytics for learners.
             </p>
           </div>
-          <Button variant="outline" className="hidden md:flex bg-transparent">
+          <Button
+            variant="outline"
+            className="hidden md:flex bg-transparent"
+          >
             Explore All Courses
           </Button>
         </div>
@@ -117,7 +120,10 @@ export default function FeaturedCourses() {
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <Button size="sm" variant="outline">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                  >
                     Access Course
                   </Button>
                 </div>

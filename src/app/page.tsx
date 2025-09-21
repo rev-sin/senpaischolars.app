@@ -1,8 +1,8 @@
-import CourseCategories from "@/components/Course-categories";
-import FeaturedCourses from "@/components/Featured-courses";
-import Footer from "@/components/Footer";
-import Hero from "@/components/Hero";
-import Navbar from "@/components/Navbar";
+import CourseCategories from '@/components/Course-categories';
+import FeaturedCourses from '@/components/Featured-courses';
+import Footer from '@/components/Footer';
+import Hero from '@/components/Hero';
+import Navbar from '@/components/Navbar';
 
 export default function Home() {
   return (

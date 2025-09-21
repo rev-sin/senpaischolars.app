@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { ArrowRight, Award, Lock, Shield, Zap } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowRight, Award, Lock, Shield, Zap } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function Hero() {
   return (

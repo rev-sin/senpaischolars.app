@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { BookOpen, Menu, X } from "lucide-react";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { BookOpen, Menu, X } from 'lucide-react';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

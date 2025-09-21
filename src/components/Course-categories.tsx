@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   BarChart,
@@ -8,57 +8,57 @@ import {
   Globe,
   Palette,
   Wrench,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const categories = [
   {
-    id: "software",
-    title: "Software Engineering",
-    description: "Full-stack, DevOps & cloud computing",
-    courses: "120+ courses",
+    id: 'software',
+    title: 'Software Engineering',
+    description: 'Full-stack, DevOps & cloud computing',
+    courses: '120+ courses',
     icon: Code,
-    color: "text-blue-600",
+    color: 'text-blue-600',
   },
   {
-    id: "design",
-    title: "Product Design",
-    description: "UI/UX, CAD & simulation design",
-    courses: "80+ courses",
+    id: 'design',
+    title: 'Product Design',
+    description: 'UI/UX, CAD & simulation design',
+    courses: '80+ courses',
     icon: Palette,
-    color: "text-purple-600",
+    color: 'text-purple-600',
   },
   {
-    id: "data",
-    title: "Data & AI",
-    description: "Machine learning, analytics & big data",
-    courses: "100+ courses",
+    id: 'data',
+    title: 'Data & AI',
+    description: 'Machine learning, analytics & big data',
+    courses: '100+ courses',
     icon: Brain,
-    color: "text-indigo-600",
+    color: 'text-indigo-600',
   },
   {
-    id: "electronics",
-    title: "Electronics",
-    description: "Embedded systems, IoT & circuits",
-    courses: "70+ courses",
+    id: 'electronics',
+    title: 'Electronics',
+    description: 'Embedded systems, IoT & circuits',
+    courses: '70+ courses',
     icon: Wrench,
-    color: "text-red-600",
+    color: 'text-red-600',
   },
   {
-    id: "mechanical",
-    title: "Mechanical Engineering",
-    description: "CAD, robotics & simulation",
-    courses: "65+ courses",
+    id: 'mechanical',
+    title: 'Mechanical Engineering',
+    description: 'CAD, robotics & simulation',
+    courses: '65+ courses',
     icon: BarChart,
-    color: "text-green-600",
+    color: 'text-green-600',
   },
   {
-    id: "networking",
-    title: "Networking & Security",
-    description: "Cloud, cybersecurity & protocols",
-    courses: "50+ courses",
+    id: 'networking',
+    title: 'Networking & Security',
+    description: 'Cloud, cybersecurity & protocols',
+    courses: '50+ courses',
     icon: Globe,
-    color: "text-teal-600",
+    color: 'text-teal-600',
   },
 ];
 

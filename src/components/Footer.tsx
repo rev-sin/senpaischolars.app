@@ -1,5 +1,5 @@
-import { Github, Linkedin, Mail, Twitter } from "lucide-react";
-import Link from "next/link";
+import { Github, Linkedin, Mail, Twitter } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
@@ -22,24 +22,24 @@ export default function Footer() {
           <div className="flex space-x-4">
             {[
               {
-                href: "https://github.com/",
+                href: 'https://github.com/',
                 icon: <Github className="w-5 h-5" />,
-                label: "GitHub",
+                label: 'GitHub',
               },
               {
-                href: "https://twitter.com/",
+                href: 'https://twitter.com/',
                 icon: <Twitter className="w-5 h-5" />,
-                label: "Twitter",
+                label: 'Twitter',
               },
               {
-                href: "https://linkedin.com/",
+                href: 'https://linkedin.com/',
                 icon: <Linkedin className="w-5 h-5" />,
-                label: "LinkedIn",
+                label: 'LinkedIn',
               },
               {
-                href: "mailto:contact@senpaischolars.com",
+                href: 'mailto:contact@senpaischolars.com',
                 icon: <Mail className="w-5 h-5" />,
-                label: "Email",
+                label: 'Email',
               },
             ].map(({ href, icon, label }) => (
               <a
