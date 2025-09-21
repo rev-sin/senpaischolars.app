@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Onboarding {
+  id        Int      @id @default(autoincrement())
+  email     String
+  password  String
+  otp       Int
+  createdAt DateTime
+  updatedAt DateTime
+}
+
+model Profile {
+  id              String         @id @default(uuid())
+  email           String         @unique
+  password        String?
+  oAuthProvider   String
+  oAuthProviderId String
+  fullName        String
+  role            Role           @default(SCHOOL_STUDENT)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  Favourites      Favourites[]
+  WatchHistory    WatchHistory[]
+}
+
+model Course {
+  id           String       @id @default(uuid())
+  title        String
+  description  String?
+  price        Int
+  thumbnailUrl String?
+  tags         String[]
+  published    Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  Favourites   Favourites[]
+  Video        Video[]
+}
+
+model Video {
+  id              String   @id @default(uuid())
+  title           String
+  description     String?
+  courseId        String
+  lectureNotesUrl String?
+  thumbnailUrl    String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  course     Course           @relation(fields: [courseId], references: [id])
+  timestamps VideoTimeStamp[]
+  history    WatchHistory[]
+}
+
+model VideoTimeStamp {
+  id      Int    @id @default(autoincrement())
+  videoId String
+  time    Int
+  label   String
+
+  video Video @relation(fields: [videoId], references: [id])
+
+  @@index([videoId])
+}
+
+model Favourites {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  courseId  String
+  createdAt DateTime @default(now())
+
+  user   Profile @relation(fields: [userId], references: [id])
+  course Course  @relation(fields: [courseId], references: [id])
+
+  @@unique([userId, courseId])
+}
+
+model WatchHistory {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  videoId   String
+  watchedAt DateTime @default(now())
+
+  user  Profile @relation(fields: [userId], references: [id])
+  video Video   @relation(fields: [videoId], references: [id])
+
+  @@index([userId])
+  @@index([videoId])
+}
