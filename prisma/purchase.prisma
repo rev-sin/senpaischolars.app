@@ -1,0 +1,11 @@
+model UserPurchase {
+  id Int @id @default(autoincrement())
+}
+
+model UserCoursePurchase {
+  id Int @id @default(autoincrement())
+}
+
+model UserVideoPurchase {
+  id Int @id @default(autoincrement())
+}

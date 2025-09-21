@@ -4,3 +4,9 @@ enum Role {
   PROFESSIONAL
   ADMIN
 }
+
+enum PublishStatus {
+  DRAFT 
+  PUBLISHED
+  ARCHIVED
+}

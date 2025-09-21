@@ -1,0 +1,82 @@
+model Course {
+  id           String        @id @default(uuid())
+  title        String
+  description  String?
+  price        Int           @default(0) // free by default
+  isFree       Boolean       @default(true)
+  thumbnailUrl String?
+  tags         String[]
+  published    PublishStatus @default(DRAFT)
+  certIssued   Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  CourseContent CourseContent[]
+  UserPurchases UserPurchases[]
+  Certificate   Certificate[]
+}
+
+model Content {
+  id                 String    @id @default(uuid())
+  type               String    @default("module")
+  title              String
+  hidden             Boolean   @default(false)
+  price              Int       @default(0)
+  isFree             Boolean   @default(true)
+  lectureNotesUrl    String?
+  thumbnailMosiacUrl String?
+  description        String?
+  thumbnail          String?
+  parentId           String?
+  parent             Content?  @relation("ContentToContent", fields: [parentId], references: [id])
+  children           Content[] @relation("ContentToContent")
+  commentsInt        Int       @default(0)
+
+  createdAt DateTime @default(now())
+  contentId String?
+
+  CourseContent CourseContent[]
+  Bookmarks     Bookmarks[]
+  VideoProgress VideoProgress[]
+  VideoMetadata VideoMetadata[]
+}
+
+model CourseContent {
+  courseId  String
+  contentId String
+
+  course  Course  @relation(fields: [courseId], references: [id])
+  content Content @relation(fields: [contentId], references: [id])
+
+  @@id([courseId, contentId])
+}
+
+model VideoMetadata {
+  id                 String  @id @default(uuid())
+  contentId          String
+  thumbnailMosaicUrl String?
+  originalMp4Url     String?
+  video1080pMp4      String?
+  video720pMp4       String?
+  video480pMp4       String?
+  video360pMp4       String?
+  duration           Int?
+  transcoded         Boolean @default(false)
+  subtitles          String? // URL to subtitle file
+  segments           Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  content Content @relation(fields: [contentId], references: [id])
+}
+
+model Certificate {
+  id       String @id @default(uuid())
+  courseId String
+  userId   String
+  slug     String @default("certId")
+
+  course Course  @relation(fields: [courseId], references: [id])
+  user   Profile @relation(fields: [userId], references: [id])
+}
