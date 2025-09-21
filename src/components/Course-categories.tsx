@@ -4,8 +4,8 @@ import {
   BarChart,
   Brain,
   Code,
-  Lock,
   Globe,
+  Lock,
   Palette,
   Wrench,
 } from "lucide-react";

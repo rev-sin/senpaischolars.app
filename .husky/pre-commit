@@ -1,2 +1,2 @@
-pnpm lint
-pnpm build
+bun lint
+bun build-app
