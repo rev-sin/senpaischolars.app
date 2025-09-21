@@ -1,8 +1,15 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": false },
   "files": {
     "ignoreUnknown": false
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "formatter": {
     "enabled": true,
@@ -14,7 +21,7 @@
     "lineWidth": 80,
     "attributePosition": "multiline",
     "bracketSpacing": true,
-    "includes": ["src/**/*.ts", "src/**/*.tsx"]
+    "includes": ["src/**/*.ts", "src/**/*.tsx", "!src/**/*.css"]
   },
   "linter": {
     "enabled": true,
