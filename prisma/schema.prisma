@@ -8,3 +8,374 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Role {
+  SCHOOL_STUDENT
+  COLLEGE_STUDENT
+  PROFESSIONAL
+  ADMIN
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum PaymentType {
+  FULL_COURSE
+  CONTENT_RENTAL
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum ApplicableTo {
+  COURSE
+  CONTENT
+  ALL
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+enum CourseType {
+  MODULE // no video or notes
+  LECTURE // video + notes
+}
+
+enum SupportTicketStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+model Onboarding {
+  id        Int      @id @default(autoincrement()) @db.Uuid
+  email     String
+  password  String
+  otp       Int
+  createdAt DateTime @default(now()) @db.Timestampz(6)
+  updatedAt DateTime @updatedAt @db.Timestampz(6)
+}
+
+model PasswordFailedAttempt {
+  id       String   @id @default(uuid()) @db.Uuid
+  userId   String   @db.Uuid
+  failedAt DateTime @default(now()) @db.Timestampz(6)
+
+  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Profile {
+  id              String    @id @default(uuid()) @db.Uuid
+  email           String    @unique
+  password        String?
+  oAuthProvider   String?
+  oAuthProviderId String?
+  fullName        String
+  role            Role      @default(SCHOOL_STUDENT)
+  disableDRM      Boolean?  @default(false)
+  createdAt       DateTime  @default(now()) @db.Timestampz(6)
+  updatedAt       DateTime  @updatedAt @db.Timestampz(6)
+  deletedAt       DateTime? @db.Timestampz(6)
+
+  Bookmarks        Bookmarks[]
+  Certificate      Certificate[]
+  CoursePurchases  UserCoursePurchases[]
+  ContentPurchases UserContentPurchases[]
+  Transactions     Transaction[]
+  VideoProgress    VideoProgress[]
+  Favourites       Favourites[]
+  FailedAttempts   PasswordFailedAttempt[]
+  Reviews          Review[]
+  SupportTickets   SupportTicket[]
+  RefundRequests   RefundRequest[]
+}
+
+model Course {
+  id           String         @id @default(uuid()) @db.Uuid
+  title        String
+  description  String?
+  price        Int            @default(0) // free by default
+  isFree       Boolean        @default(true)
+  thumbnailUrl String?
+  tags         String[]
+  published    PublishStatus? @default(DRAFT)
+  certIssued   Boolean?       @default(false)
+  createdAt    DateTime       @default(now()) @db.Timestampz(6)
+  updatedAt    DateTime       @updatedAt @db.Timestampz(6)
+
+  Instructors   CourseInstructor[]
+  CourseContent CourseContent[]
+  UserPurchases UserPurchases[]
+  Certificate   Certificate[]
+  Favourites    Favourites[]
+
+  discounts Discount[] @relation("DiscountCourses")
+}
+
+model Instructor {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String
+  bio          String?
+  profileImage String?
+  email        String   @unique
+  createdAt    DateTime @default(now()) @db.Timestampz(6)
+  updatedat    DateTime @db.Timestampz(6)
+
+  Courses CourseInstructor[]
+}
+
+model CourseInstructor {
+  courseId     String @db.Uuid
+  instructorId String @db.Uuid
+
+  course     Course     @relation(fields: [courseId], references: [id])
+  instructor Instructor @relation(fields: [instructorId], references: [id])
+
+  @@id([courseId, instructorId])
+}
+
+model Content {
+  id                 String     @id @default(uuid()) @db.Uuid
+  type               CourseType @default(MODULE)
+  title              String
+  hidden             Boolean    @default(false)
+  price              Int        @default(0)
+  isFree             Boolean    @default(true)
+  lectureNotesUrl    String?
+  thumbnailMosiacUrl String?
+  description        String?
+  thumbnail          String?
+  parentId           String?
+  parent             Content?   @relation("ContentToContent", fields: [parentId], references: [id])
+  children           Content[]  @relation("ContentToContent")
+
+  createdAt DateTime @default(now()) @db.Timestampz(6)
+
+  ContentPurchases UserContentPurchases[]
+  Course           CourseContent[]
+  Bookmarks        Bookmarks[]
+  VideoProgress    VideoProgress[]
+  VideoMetadata    VideoMetadata[]
+}
+
+model CourseContent {
+  courseId  String @db.Uuid
+  contentId String @db.Uuid
+
+  course  Course  @relation(fields: [courseId], references: [id])
+  content Content @relation(fields: [contentId], references: [id])
+
+  @@id([courseId, contentId])
+}
+
+model VideoMetadata {
+  id                 String   @id @default(uuid()) @db.Uuid
+  contentId          String   @db.Uuid
+  thumbnailMosaicUrl String?
+  originalMp4Url     String?
+  video1080pMp4      String?
+  video720pMp4       String?
+  video480pMp4       String?
+  video360pMp4       String?
+  duration           Int?
+  transcoded         Boolean  @default(false)
+  subtitles          String? // URL to subtitle file
+  segments           Json?
+  createdAt          DateTime @default(now()) @db.Timestampz(6)
+  updatedAt          DateTime @updatedAt @db.Timestampz(6)
+
+  content Content @relation(fields: [contentId], references: [id])
+}
+
+// Favourites for the course
+model Favourites {
+  id       Int    @id @default(autoincrement()) @db.Uuid
+  userId   String @db.Uuid
+  courseId String @db.Uuid
+
+  user   Profile @relation(fields: [userId], references: [id])
+  course Course  @relation(fields: [courseId], references: [id])
+}
+
+// Bookmarks for content of the course
+model Bookmarks {
+  id        Int      @id @default(autoincrement()) @db.Uuid
+  userId    String   @db.Uuid
+  contentId String   @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestampz(6)
+
+  user    Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content Content @relation(fields: [contentId], references: [id])
+
+  @@unique([userId, contentId])
+}
+
+model Discount {
+  id                String       @id @default(uuid())
+  code              String       @unique
+  description       String?
+  discountType      DiscountType
+  amount            Int
+  applicableTo      ApplicableTo
+  startAt           DateTime     @db.Timestampz(6)
+  endAt             DateTime     @db.Timestampz(6)
+  usageLimit        Int?
+  perUserUsageLimit Int? // unlimited if NULL
+  roles             Role[]
+  courses           Course[]     @relation("DiscountCourses")
+
+  createdAt DateTime @default(now()) @db.Timestampz(6)
+  updatedAt DateTime @updatedAt @db.Timestampz(6)
+}
+
+model DiscountUsage {
+  id         String   @id @default(uuid()) @db.Uuid
+  discountId String   @db.Uuid
+  userId     String   @db.Uuid
+  usedAt     DateTime @default(now())
+
+  user     Profile  @relation(fields: [userId], references: [id])
+  discount Discount @relation(fields: [discountId], references: [id])
+}
+
+model Transaction {
+  id                String        @id @default(uuid()) @db.Uuid
+  userId            String        @db.Uuid
+  razorpayPaymentId String        @unique
+  razorpayOrderId   String
+  amount            Int
+  currency          String        @db.VarChar(3)
+  status            PaymentStatus @default(PENDING)
+  captured          Boolean
+  method            String // payment method (card, netbanking, upi, wallet)
+  description       String?
+  email             String?
+  contact           String?
+  fee               Int? // currency subunits
+  tax               Int? // currency subunits
+  errorCode         String? // Error code for payment failure
+  errorDescription  String? // Desc of error
+  errorReason       String? // Specific reason for failure
+  notes             Json? // User defined KV metadata
+  cardId            String? // ID of card / if applicable
+  cardBrand         String? // Card branch (Visa, Mastercard)
+  cardLast4         String? // last 4 digits of the card
+  bank              String? // bank code (for netbanking or UPI)
+  vpa               String? // virtual payment address for UPI
+  paymentSignature  String?
+  paymentDate       DateTime?     @db.Timestampz(6)
+
+  courseId         String?     @db.Uuid
+  contentId        String?     @db.Uuid
+  paymentType      PaymentType @default(CONTENT_RENTAL)
+  rentValidityDays Int?
+  discountId       String?     @db.Uuid
+  couponCode       String?
+  createdAt        DateTime    @default(now()) @db.Timestampz(6)
+  updatedAt        DateTime    @updatedAt @db.Timestampz(6)
+
+  user     Profile   @relation(fields: [userId], references: [id])
+  course   Course?   @relation(fields: [courseId], references: [id])
+  content  Content?  @relation(fields: [contentId], references: [id])
+  discount Discount? @relation(fields: [discountId], references: [id])
+}
+
+model UserCoursePurchases {
+  userId       String   @db.Uuid
+  courseId     String   @db.Uuid
+  registeredAt DateTime @default(now()) @db.Timestampz(6)
+  validTill    DateTime @db.Timestampz(6)
+
+  user   Profile @relation(fields: [userId], references: [id])
+  course Course  @relation(fields: [courseId], references: [id])
+
+  @@id([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+}
+
+model UserContentPurchases {
+  userId       String   @db.Uuid
+  contentId    String   @db.UUid
+  registeredAt DateTime @default(now()) @db.Timestampz(6)
+  validTill    DateTime @db.Timestampz(6)
+
+  user    Profile @relation(fields: [userId], references: [id])
+  content Content @relation(fields: [contentId], references: [id])
+
+  @@id([userId, contentId])
+}
+
+model VideoProgress {
+  id              Int      @id @default(autoincrement())
+  userId          String   @db.Uuid
+  contentId       String   @db.Uuid
+  progressMs      Int
+  markAsCompleted Boolean  @default(false) @db.Timestampz(6)
+  updatedAt       DateTime @default(now()) @updatedAt @db.Timestampz(6)
+
+  user    Profile @relation(fields: [userId], references: [id])
+  content Content @relation(fields: [contentId], references: [id])
+
+  @@unique([contentId, userId])
+}
+
+model Certificate {
+  id       String @id @default(uuid()) @db.Uuid
+  courseId String @db.Uuid
+  userId   String @db.Uuid
+
+  course Course  @relation(fields: [courseId], references: [id])
+  user   Profile @relation(fields: [userId], references: [id])
+}
+
+model Review {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  courseId  String?   @db.Uuid
+  contentId String?   @db.Uuid
+  rating    Int // 1 to 5 stars
+  comment   String?
+  createdAt DateTime  @default(now()) @db.Timestampz(6)
+  updatedAt DateTime? @updatedAt @db.Timestampz(6)
+
+  user    Profile  @relation(fields: [userId], references: [id])
+  course  Course?  @relation(fields: [courseId], references: [id])
+  content Content? @relation(fields: [contentId], references: [id])
+
+  // Make sure to check if either courseId or contentId is NOT NULL
+  // within the application layer
+}
+
+model SupportTicket {
+  id          String              @id @default(uuid()) @db.Uuid
+  userId      String              @db.Uuid
+  subject     String
+  description String
+  status      SupportTicketStatus @default(OPEN)
+  createdAt   DateTime            @default(now()) @db.Timestampz(6)
+  updatedAt   DateTime            @updatedAt @db.Timestampz(6)
+
+  user Profile @relation(fields: [userId], references: [id])
+}
+
+model RefundRequest {
+  id          String    @id @default(uuid()) @db.Uuid
+  txnId       String    @db.Uuid
+  userId      String    @db.Uuid
+  reason      String
+  status      String    @default("PENDING") // e.g. PENDING, APPROVED, REJECTED
+  requestedAt DateTime  @default(now()) @db.Timestampz(6)
+  processedAt DateTime?
+
+  user        Profile     @relation(fields: [userId], references: [id])
+  transaction Transaction @relation(fields: [txnId], references: [id])
+}
