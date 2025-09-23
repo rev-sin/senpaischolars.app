@@ -5,11 +5,11 @@
 Assuming you have pnpm installed.
 
 ```bash
-pnpm i
-pnpm dev
+bun install
+bun dev
 
 # add packages
-pnpm add <package-name>
+bun add <package-name>
 ```
 
 Checkout package.json for scripts and other miscellaneous configs.
@@ -17,11 +17,11 @@ Checkout package.json for scripts and other miscellaneous configs.
 ## Locally
 
 > All biome checks must pass locally!\
-> The app must build!\
+> The app will be build during push!\
 > The app will be formatted pre-commit!
 
 ## North
 
-> Must open a PR!\
+> Must open a PR to `dev` branch!\
 > All PRs must be reviewed before merge!\
 > All PRs must pass all checks!
