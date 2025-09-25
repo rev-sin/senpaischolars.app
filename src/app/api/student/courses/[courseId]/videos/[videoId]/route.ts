@@ -1,12 +1,13 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
-  request: Request,
-  { params }: { params: { courseId: string; videoId: string } },
+  request: NextRequest,
+  { params }: { params: Promise<{ courseId: string; videoId: string }> },
 ) {
+  const { courseId, videoId } = await params;
   // TODO: Fetch video data.
   // IMPORTANT: Ensure the student has purchased the course before returning the video data.
   return NextResponse.json({
-    message: `GET video ${params.videoId} for course ${params.courseId} for student`,
+    message: `GET video ${videoId} for course ${courseId} for student`,
   });
 }

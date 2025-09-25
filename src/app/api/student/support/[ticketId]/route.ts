@@ -1,11 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
-  request: Request,
-  { params }: { params: { ticketId: string } },
+  request: NextRequest,
+  { params }: { params: Promise<{ ticketId: string }> },
 ) {
+  const { ticketId } = await params;
   // TODO: Fetch a single support ticket by its ID
   return NextResponse.json({
-    message: `GET support ticket ${params.ticketId}`,
+    message: `GET support ticket ${ticketId}`,
   });
 }

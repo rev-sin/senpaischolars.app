@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(
-  request: Request,
-  { params }: { params: { courseId: string } },
+  request: NextRequest,
+  { params }: { params: Promise<{ courseId: string }> },
 ) {
   // TODO: Get the review content from the request body.
   // const { rating, text } = await request.json();
@@ -12,9 +12,10 @@ export async function POST(
   // TODO: Verify that the student has purchased the course before allowing a review.
 
   // TODO: Save the review to the database.
+  const { courseId } = await params;
 
   return NextResponse.json({
-    message: `Review submitted for course ${params.courseId}`,
+    message: `Review submitted for course ${courseId}`,
   });
 }
 

@@ -1,13 +1,13 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
-  request: Request,
-  { params }: { params: { courseId: string; videoId: string } },
+  request: NextRequest,
+  { params }: { params: Promise<{ courseId: string; videoId: string }> },
 ) {
   // TODO: Fetch video data from the database using courseId and videoId
   // Make sure to handle cases where the video or course doesn't exist.
 
-  const { courseId, videoId } = params;
+  const { courseId, videoId } = await params;
 
   // Placeholder data
   const videoData = {

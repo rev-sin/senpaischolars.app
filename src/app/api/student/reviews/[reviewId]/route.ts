@@ -1,9 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
-  request: Request,
-  { params }: { params: { reviewId: string } },
+  request: NextRequest,
+  { params }: { params: Promise<{ reviewId: string }> },
 ) {
+  const { reviewId } = await params;
   // TODO: Fetch a single review by its ID
-  return NextResponse.json({ message: `GET review ${params.reviewId}` });
+  return NextResponse.json({ message: `GET review ${reviewId}` });
 }
