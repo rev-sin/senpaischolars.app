@@ -49,6 +49,12 @@ enum CourseType {
   LECTURE // video + notes
 }
 
+enum RefundStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum SupportTicketStatus {
   OPEN
   IN_PROGRESS
@@ -56,7 +62,7 @@ enum SupportTicketStatus {
 }
 
 model Onboarding {
-  id        Int      @id @default(autoincrement()) @db.Uuid
+  id        Int      @id @default(autoincrement())
   email     String
   password  String
   otp       Int
@@ -197,7 +203,7 @@ model VideoMetadata {
 
 // Favourites for the course
 model Favourites {
-  id       Int    @id @default(autoincrement()) @db.Uuid
+  id       Int    @id @default(autoincrement())
   userId   String @db.Uuid
   courseId String @db.Uuid
 
@@ -207,7 +213,7 @@ model Favourites {
 
 // Bookmarks for content of the course
 model Bookmarks {
-  id        Int      @id @default(autoincrement()) @db.Uuid
+  id        Int      @id @default(autoincrement())
   userId    String   @db.Uuid
   contentId String   @db.Uuid
   createdAt DateTime @default(now()) @db.Timestampz(6)
@@ -368,12 +374,12 @@ model SupportTicket {
 }
 
 model RefundRequest {
-  id          String    @id @default(uuid()) @db.Uuid
-  txnId       String    @db.Uuid
-  userId      String    @db.Uuid
+  id          String       @id @default(uuid()) @db.Uuid
+  txnId       String       @db.Uuid
+  userId      String       @db.Uuid
   reason      String
-  status      String    @default("PENDING") // e.g. PENDING, APPROVED, REJECTED
-  requestedAt DateTime  @default(now()) @db.Timestampz(6)
+  status      RefundStatus @default(PENDING) // e.g. PENDING, APPROVED, REJECTED
+  requestedAt DateTime     @default(now()) @db.Timestampz(6)
   processedAt DateTime?
 
   user        Profile     @relation(fields: [userId], references: [id])
