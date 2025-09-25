@@ -1,6 +1,10 @@
 import React from 'react';
 
-const VideoPage = ({ params }: { params: { courseId: string, videoId: string } }) => {
+const VideoPage = ({
+  params,
+}: {
+  params: { courseId: string; videoId: string };
+}) => {
   // TODO: Fetch video data based on courseId and videoId
 
   return (
