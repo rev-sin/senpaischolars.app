@@ -1,7 +1,7 @@
-"use client"
+'use client';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { BookOpen, GraduationCap, House, Medal } from "@phosphor-icons/react";
+import { BookOpen, GraduationCap, House, Medal } from '@phosphor-icons/react';
 
 export default function NotFound() {
   return (
