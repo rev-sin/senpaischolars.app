@@ -1,6 +1,7 @@
+"use client"
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { BookOpen, GraduationCap, Award, Home } from 'lucide-react';
+import { BookOpen, GraduationCap, House, Medal } from "@phosphor-icons/react";
 
 export default function NotFound() {
   return (
@@ -21,13 +22,10 @@ export default function NotFound() {
                 </div>
 
                 <div className="absolute -bottom-6 -left-8 w-12 h-12 bg-green-100 border border-green-200 rounded-full flex items-center justify-center">
-                  <Award className="w-6 h-6 text-green-600" />
+                  <Medal className="w-6 h-6 text-green-600" />
                 </div>
-
                 <div className="absolute top-4 -left-12 w-8 h-8 bg-orange-100 border border-orange-200 rounded-lg rotate-45"></div>
-
                 <div className="absolute -bottom-4 right-8 w-6 h-6 bg-pink-100 border border-pink-200 rounded-full"></div>
-
                 <div className="absolute top-12 right-16 w-4 h-4 bg-cyan-100 border border-cyan-200 rounded-sm rotate-12"></div>
               </div>
               <div className="absolute -top-16 left-8 w-3 h-3 bg-purple-200 rounded-full opacity-60"></div>
@@ -35,7 +33,6 @@ export default function NotFound() {
               <div className="absolute top-20 -left-16 w-5 h-5 bg-green-200 rounded-full opacity-40"></div>
             </div>
           </div>
-
           <div className="p-12 flex flex-col justify-center">
             <div className="space-y-8">
               <div>
@@ -43,7 +40,7 @@ export default function NotFound() {
                   Oops! Page not found
                 </h1>
                 <p className="text-muted-foreground text-lg leading-relaxed">
-                  It looks like the page youre looking for has moved or no
+                  It looks like the page you are looking for has moved or no
                   longer exists. Return to your dashboard and pick up right
                   where you left off.
                 </p>
@@ -55,7 +52,7 @@ export default function NotFound() {
                 className="bg-foreground text-background hover:bg-foreground/90 px-8 py-3 text-base font-medium rounded-full w-fit"
               >
                 <Link href="/">
-                  <Home className="w-4 h-4 mr-2" />
+                  <House className="w-4 h-4 mr-2" />
                   GO TO HOME
                 </Link>
               </Button>
