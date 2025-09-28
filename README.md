@@ -1,6 +1,8 @@
 # Senpai Scholars
 
-Senpai Scholars is a course-selling website with a dedicated admin dashboard. It features a single login flow for both students and administrators, with role-based access control to direct users to their respective dashboards.
+Senpai Scholars is a course-selling website with a dedicated admin dashboard. 
+It features a single login flow for both students and administrators, 
+with role-based access control to direct users to their respective dashboards.
 
 ## Tech Stack
 
@@ -8,7 +10,7 @@ Senpai Scholars is a course-selling website with a dedicated admin dashboard. It
 *   **Language:** [TypeScript](https://www.typescriptlang.org/)
 *   **Package Manager:** [bun](https://bun.sh/)
 *   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-*   **UI Components:** [Radix UI](https://www.radix-ui.com/) / [shadcn-ui](https://ui.shadcn.com/)
+*   **UI Components:** [shadcn-ui](https://ui.shadcn.com/)
 *   **Database ORM:** [Prisma](https://www.prisma.io/)
 *   **Backend/Auth:** [Supabase](https://supabase.io/)
 *   **Linting & Formatting:** [Biome](https://biomejs.dev/)
