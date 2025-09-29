@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    optimizePackageImports: ["@phosphor-icons/react"]
+  },
   images: {
     remotePatterns: [
       {
@@ -12,6 +15,9 @@ const nextConfig: NextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true,
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production"
   }
 };
 
