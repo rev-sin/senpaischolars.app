@@ -5,8 +5,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // pool
+  directUrl = env("DATABASE_DIRECT_URL") // migrations
 }
 
 enum Role {
@@ -66,16 +67,8 @@ model Onboarding {
   email     String
   password  String
   otp       Int
-  createdAt DateTime @default(now()) @db.Timestampz(6)
-  updatedAt DateTime @updatedAt @db.Timestampz(6)
-}
-
-model PasswordFailedAttempt {
-  id       String   @id @default(uuid()) @db.Uuid
-  userId   String   @db.Uuid
-  failedAt DateTime @default(now()) @db.Timestampz(6)
-
-  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
 }
 
 model Profile {
@@ -87,9 +80,9 @@ model Profile {
   fullName        String
   role            Role      @default(SCHOOL_STUDENT)
   disableDRM      Boolean?  @default(false)
-  createdAt       DateTime  @default(now()) @db.Timestampz(6)
-  updatedAt       DateTime  @updatedAt @db.Timestampz(6)
-  deletedAt       DateTime? @db.Timestampz(6)
+  createdAt       DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime  @updatedAt @db.Timestamptz(6)
+  deletedAt       DateTime? @db.Timestamptz(6)
 
   Bookmarks        Bookmarks[]
   Certificate      Certificate[]
@@ -98,10 +91,10 @@ model Profile {
   Transactions     Transaction[]
   VideoProgress    VideoProgress[]
   Favourites       Favourites[]
-  FailedAttempts   PasswordFailedAttempt[]
   Reviews          Review[]
   SupportTickets   SupportTicket[]
   RefundRequests   RefundRequest[]
+  DiscountUsage    DiscountUsage[]
 }
 
 model Course {
@@ -114,16 +107,18 @@ model Course {
   tags         String[]
   published    PublishStatus? @default(DRAFT)
   certIssued   Boolean?       @default(false)
-  createdAt    DateTime       @default(now()) @db.Timestampz(6)
-  updatedAt    DateTime       @updatedAt @db.Timestampz(6)
+  createdAt    DateTime       @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime       @updatedAt @db.Timestamptz(6)
 
-  Instructors   CourseInstructor[]
-  CourseContent CourseContent[]
-  UserPurchases UserPurchases[]
-  Certificate   Certificate[]
-  Favourites    Favourites[]
+  Instructors         CourseInstructor[]
+  CourseContent       CourseContent[]
+  UserCoursePurchases UserCoursePurchases[]
+  Certificate         Certificate[]
+  Favourites          Favourites[]
 
-  discounts Discount[] @relation("DiscountCourses")
+  discounts   Discount[]    @relation("DiscountCourses")
+  Transaction Transaction[]
+  Review      Review[]
 }
 
 model Instructor {
@@ -132,8 +127,8 @@ model Instructor {
   bio          String?
   profileImage String?
   email        String   @unique
-  createdAt    DateTime @default(now()) @db.Timestampz(6)
-  updatedat    DateTime @db.Timestampz(6)
+  createdAt    DateTime @default(now()) @db.Timestamptz(6)
+  updatedat    DateTime @db.Timestamptz(6)
 
   Courses CourseInstructor[]
 }
@@ -159,17 +154,19 @@ model Content {
   thumbnailMosiacUrl String?
   description        String?
   thumbnail          String?
-  parentId           String?
+  parentId           String?    @db.Uuid
   parent             Content?   @relation("ContentToContent", fields: [parentId], references: [id])
   children           Content[]  @relation("ContentToContent")
 
-  createdAt DateTime @default(now()) @db.Timestampz(6)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
 
   ContentPurchases UserContentPurchases[]
   Course           CourseContent[]
   Bookmarks        Bookmarks[]
   VideoProgress    VideoProgress[]
   VideoMetadata    VideoMetadata[]
+  Transaction      Transaction[]
+  Review           Review[]
 }
 
 model CourseContent {
@@ -195,8 +192,8 @@ model VideoMetadata {
   transcoded         Boolean  @default(false)
   subtitles          String? // URL to subtitle file
   segments           Json?
-  createdAt          DateTime @default(now()) @db.Timestampz(6)
-  updatedAt          DateTime @updatedAt @db.Timestampz(6)
+  createdAt          DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt          DateTime @updatedAt @db.Timestamptz(6)
 
   content Content @relation(fields: [contentId], references: [id])
 }
@@ -216,7 +213,7 @@ model Bookmarks {
   id        Int      @id @default(autoincrement())
   userId    String   @db.Uuid
   contentId String   @db.Uuid
-  createdAt DateTime @default(now()) @db.Timestampz(6)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
 
   user    Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
   content Content @relation(fields: [contentId], references: [id])
@@ -225,21 +222,23 @@ model Bookmarks {
 }
 
 model Discount {
-  id                String       @id @default(uuid())
+  id                String       @id @default(uuid()) @db.Uuid
   code              String       @unique
   description       String?
   discountType      DiscountType
   amount            Int
   applicableTo      ApplicableTo
-  startAt           DateTime     @db.Timestampz(6)
-  endAt             DateTime     @db.Timestampz(6)
+  startAt           DateTime     @db.Timestamptz(6)
+  endAt             DateTime     @db.Timestamptz(6)
   usageLimit        Int?
   perUserUsageLimit Int? // unlimited if NULL
   roles             Role[]
   courses           Course[]     @relation("DiscountCourses")
 
-  createdAt DateTime @default(now()) @db.Timestampz(6)
-  updatedAt DateTime @updatedAt @db.Timestampz(6)
+  createdAt     DateTime        @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime        @updatedAt @db.Timestamptz(6)
+  DiscountUsage DiscountUsage[]
+  Transaction   Transaction[]
 }
 
 model DiscountUsage {
@@ -277,7 +276,7 @@ model Transaction {
   bank              String? // bank code (for netbanking or UPI)
   vpa               String? // virtual payment address for UPI
   paymentSignature  String?
-  paymentDate       DateTime?     @db.Timestampz(6)
+  paymentDate       DateTime?     @db.Timestamptz(6)
 
   courseId         String?     @db.Uuid
   contentId        String?     @db.Uuid
@@ -285,20 +284,21 @@ model Transaction {
   rentValidityDays Int?
   discountId       String?     @db.Uuid
   couponCode       String?
-  createdAt        DateTime    @default(now()) @db.Timestampz(6)
-  updatedAt        DateTime    @updatedAt @db.Timestampz(6)
+  createdAt        DateTime    @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime    @updatedAt @db.Timestamptz(6)
 
-  user     Profile   @relation(fields: [userId], references: [id])
-  course   Course?   @relation(fields: [courseId], references: [id])
-  content  Content?  @relation(fields: [contentId], references: [id])
-  discount Discount? @relation(fields: [discountId], references: [id])
+  user          Profile         @relation(fields: [userId], references: [id])
+  course        Course?         @relation(fields: [courseId], references: [id])
+  content       Content?        @relation(fields: [contentId], references: [id])
+  discount      Discount?       @relation(fields: [discountId], references: [id])
+  RefundRequest RefundRequest[]
 }
 
 model UserCoursePurchases {
   userId       String   @db.Uuid
   courseId     String   @db.Uuid
-  registeredAt DateTime @default(now()) @db.Timestampz(6)
-  validTill    DateTime @db.Timestampz(6)
+  registeredAt DateTime @default(now()) @db.Timestamptz(6)
+  validTill    DateTime @db.Timestamptz(6)
 
   user   Profile @relation(fields: [userId], references: [id])
   course Course  @relation(fields: [courseId], references: [id])
@@ -310,9 +310,9 @@ model UserCoursePurchases {
 
 model UserContentPurchases {
   userId       String   @db.Uuid
-  contentId    String   @db.UUid
-  registeredAt DateTime @default(now()) @db.Timestampz(6)
-  validTill    DateTime @db.Timestampz(6)
+  contentId    String   @db.Uuid
+  registeredAt DateTime @default(now()) @db.Timestamptz(6)
+  validTill    DateTime @db.Timestamptz(6)
 
   user    Profile @relation(fields: [userId], references: [id])
   content Content @relation(fields: [contentId], references: [id])
@@ -325,8 +325,8 @@ model VideoProgress {
   userId          String   @db.Uuid
   contentId       String   @db.Uuid
   progressMs      Int
-  markAsCompleted Boolean  @default(false) @db.Timestampz(6)
-  updatedAt       DateTime @default(now()) @updatedAt @db.Timestampz(6)
+  markAsCompleted Boolean  @default(false)
+  updatedAt       DateTime @default(now()) @updatedAt @db.Timestamptz(6)
 
   user    Profile @relation(fields: [userId], references: [id])
   content Content @relation(fields: [contentId], references: [id])
@@ -350,8 +350,8 @@ model Review {
   contentId String?   @db.Uuid
   rating    Int // 1 to 5 stars
   comment   String?
-  createdAt DateTime  @default(now()) @db.Timestampz(6)
-  updatedAt DateTime? @updatedAt @db.Timestampz(6)
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime? @updatedAt @db.Timestamptz(6)
 
   user    Profile  @relation(fields: [userId], references: [id])
   course  Course?  @relation(fields: [courseId], references: [id])
@@ -367,8 +367,8 @@ model SupportTicket {
   subject     String
   description String
   status      SupportTicketStatus @default(OPEN)
-  createdAt   DateTime            @default(now()) @db.Timestampz(6)
-  updatedAt   DateTime            @updatedAt @db.Timestampz(6)
+  createdAt   DateTime            @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime            @updatedAt @db.Timestamptz(6)
 
   user Profile @relation(fields: [userId], references: [id])
 }
@@ -379,7 +379,7 @@ model RefundRequest {
   userId      String       @db.Uuid
   reason      String
   status      RefundStatus @default(PENDING) // e.g. PENDING, APPROVED, REJECTED
-  requestedAt DateTime     @default(now()) @db.Timestampz(6)
+  requestedAt DateTime     @default(now()) @db.Timestamptz(6)
   processedAt DateTime?
 
   user        Profile     @relation(fields: [userId], references: [id])

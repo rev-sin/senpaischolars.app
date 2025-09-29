@@ -1,1 +1,55 @@
-bun run build
+#!/bin/sh
+
+# This script is for the .husky/pre-push hook.
+# It runs `bun run build` only if files in `src/` or `prisma/` have changed.
+
+run_build_and_exit() {
+  echo "pre-push: Changes detected in src/ or prisma/. Running build..."
+  bun run build
+  if [ $? -ne 0 ]; then
+    echo "pre-push: Build failed. Aborting push."
+    exit 1
+  fi
+  echo "pre-push: Build successful."
+  exit 0
+}
+
+# Get the remote name from the first argument
+remote="$1"
+if [ -z "$remote" ]; then
+    remote="origin"
+fi
+
+# Read what is being pushed from stdin, line by line.
+while read local_ref local_sha remote_ref remote_sha; do
+  # A zero SHA for local_sha means the ref is being deleted.
+  if [ "$local_sha" = "0000000000000000000000000000000000000000" ]; then
+    continue # Skip deleted refs.
+  fi
+
+  # A zero SHA for remote_sha means the ref is being created.
+  if [ "$remote_sha" = "0000000000000000000000000000000000000000" ]; then
+    # For a new ref, find the remote's default branch to compare against.
+    base_commit=$(git symbolic-ref "refs/remotes/$remote/HEAD" 2>/dev/null)
+    if [ -z "$base_commit" ]; then
+      echo "pre-push: Cannot determine remote's default branch for new ref '$local_ref'."
+      echo "pre-push: Running build as a precaution."
+      run_build_and_exit
+    fi
+  else
+    # For an existing ref, compare against the commit the remote ref points to.
+    base_commit="$remote_sha"
+  fi
+
+  # Check for changes in the specified directories.
+  # `git diff --name-only` lists the files that have changed.
+  changed_files=$(git diff --name-only "$base_commit" "$local_sha" -- src/ prisma/)
+
+  if [ -n "$changed_files" ]; then
+    echo "pre-push: Detected changes in src/ or prisma/ for ref '$local_ref'."
+    run_build_and_exit
+  fi
+done
+
+echo "pre-push: No changes in src/ or prisma/ to build. Skipping."
+exit 0
