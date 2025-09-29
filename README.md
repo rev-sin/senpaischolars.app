@@ -51,7 +51,7 @@ The project uses Supabase for the database and authentication.
 
     ```bash
     cp .env.sample .env
-    // or use .env.local in local development with no additional config
+    # or use .env.local in local development with no additional config
     ```
 
 3.  **Fill in the variables:** Get the required credentials from your Supabase 
@@ -72,7 +72,7 @@ The project uses Supabase for the database and authentication.
 
 2.  **Apply Row Level Security (RLS) Policies:**
     ```bash
-    // Runs the only migration file which contains RLS policies
+    # Runs the only migration file which contains RLS policies
     supabase migration up
     ```
     If you are running a local Supabase instance, ensure it's started 
