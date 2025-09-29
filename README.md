@@ -51,9 +51,11 @@ The project uses Supabase for the database and authentication.
 
     ```bash
     cp .env.sample .env
+    // or use .env.local in local development with no additional config
     ```
 
-3.  **Fill in the variables:** Get the required credentials from your Supabase project settings and add them to the `.env` file:
+3.  **Fill in the variables:** Get the required credentials from your Supabase 
+    project settings and add them to the `.env` file: 
 
     *   `NEXT_PUBLIC_SUPABASE_URL`: Found in `Project Settings > API > Project URL`.
     *   `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Found in `Project Settings > API > Project API keys` (use the `anon` `public` key).
@@ -62,13 +64,21 @@ The project uses Supabase for the database and authentication.
 
 ### 5. Database Setup
 
-1.  **Run Migrations:** Apply the database schema to your Supabase database using Prisma:
+1.  **Run Prisma Migrations:** Apply the database schema to your Supabase database using Prisma:
 
     ```bash
     bunx prisma migrate dev
     ```
 
-2.  **Seed the Database:** The `supabase/seed.sql` file contains initial data for the database. Go to the `SQL Editor` in your Supabase project dashboard, paste the contents of `seed.sql`, and run the query.
+2.  **Apply Row Level Security (RLS) Policies:**
+    ```bash
+    // Runs the only migration file which contains RLS policies
+    supabase migration up
+    ```
+    If you are running a local Supabase instance, ensure it's started 
+    (`supabase start`) before running the migration. For remote deployment, 
+    ensure your Supabase CLI is linked to your project and then run 
+    `supabase migration up`.
 
 ### 6. Run the Development Server
 
