@@ -1,7 +1,7 @@
-import { type EmailOtpType } from '@supabase/supabase-js';
+import type { EmailOtpType } from '@supabase/supabase-js';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import createClient from '@/utils/supabase/api';
+import { createClient } from '@/lib/supabase/server';
 
 function stringOrFirstString(item: string | string[] | undefined) {
   return Array.isArray(item) ? item[0] : item;
@@ -23,7 +23,7 @@ export default async function handler(
   let next = '/error';
 
   if (token_hash && type) {
-    const supabase = createClient(req, res);
+    const supabase = await createClient();
     const { error } = await supabase.auth.verifyOtp({
       type: type as EmailOtpType,
       token_hash,

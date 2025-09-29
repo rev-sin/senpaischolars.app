@@ -1,7 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { createClient } from '@/utils/supabase/component';
+import { useId, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,19 +29,22 @@ export default function LoginPage() {
     router.push('/');
   }
 
+  const emailId = useId();
+  const passwordId = useId();
+
   return (
     <main>
       <form>
-        <label htmlFor="email">Email:</label>
+        <label htmlFor={emailId}>Email:</label>
         <input
-          id="email"
+          id={emailId}
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <label htmlFor="password">Password:</label>
+        <label htmlFor={passwordId}>Password:</label>
         <input
-          id="password"
+          id={passwordId}
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
