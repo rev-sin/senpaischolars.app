@@ -1,9 +1,10 @@
 project_id = "senpai"
 
 [api]
-enabled = true
+enabled = false
 port = 54321
-schemas = ["public", "graphql_public"]
+# schemas = ["public", "graphql_public"]
+schemas = ["public"]
 extra_search_path = ["public", "extensions"]
 max_rows = 1000
 
@@ -20,7 +21,7 @@ shadow_port = 54320
 major_version = 17
 
 [db.pooler]
-enabled = false
+enabled = true
 # Port to use for the local connection pooler.
 port = 54329
 pool_mode = "transaction"
@@ -31,11 +32,11 @@ max_client_conn = 100
 # secret_key = "env(SECRET_VALUE)"
 
 [db.migrations]
-enabled = true
+enabled = false
 schema_paths = []
 
 [db.seed]
-enabled = true
+enabled = false
 sql_paths = ["./seed.sql"]
 
 [db.network_restrictions]
@@ -49,7 +50,7 @@ allowed_cidrs = ["0.0.0.0/0"]
 allowed_cidrs_v6 = ["::/0"]
 
 [realtime]
-enabled = true
+enabled = false
 # Bind realtime via either IPv4 or IPv6. (default: IPv4)
 # ip_version = "IPv6"
 # The maximum length in bytes of HTTP request headers. (default: 4096)
@@ -57,17 +58,13 @@ enabled = true
 
 [studio]
 enabled = true
-# Port to use for Supabase Studio.
 port = 54323
-# External URL of the API server that frontend connects to.
 api_url = "http://127.0.0.1"
-# OpenAI API Key to use for Supabase AI in the Supabase Studio.
-openai_api_key = "env(OPENAI_API_KEY)"
 
 # Email testing server. Emails sent with the local dev setup are not actually sent - rather, they
 # are monitored, and you can view the emails that would have been sent from the web interface.
 [inbucket]
-enabled = true
+enabled = false
 # Port to use for the email testing server web interface.
 port = 54324
 # Uncomment to expose additional ports for testing user applications that send emails.
@@ -77,7 +74,7 @@ port = 54324
 # sender_name = "Admin"
 
 [storage]
-enabled = true
+enabled = false
 # The maximum file size allowed (e.g. "5MB", "500KB").
 file_size_limit = "50MiB"
 
@@ -278,7 +275,6 @@ deno_version = 2
 [analytics]
 enabled = false
 port = 54327
-# Configure one of the supported backends: `postgres`, `bigquery`.
 backend = "postgres"
 
 # Experimental features may be deprecated any time
@@ -294,13 +290,8 @@ backend = "postgres"
 # Configures AWS_SECRET_ACCESS_KEY for S3 bucket
 # s3_secret_key = "env(S3_SECRET_KEY)"
 
-[functions.template]
+[functions.create-profile-on-signup]
 enabled = true
 verify_jwt = true
-import_map = "./functions/template/deno.json"
-# Uncomment to specify a custom file path to the entrypoint.
-# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
-entrypoint = "./functions/template/index.ts"
-# Specifies static files to be bundled with the function. Supports glob patterns.
-# For example, if you want to serve static HTML pages in your function:
-# static_files = [ "./functions/template/*.html" ]
+import_map = "./functions/create-profile-on-signup/deno.json"
+entrypoint = "./functions/create-profile-on-signup/index.ts"

@@ -71,14 +71,6 @@ model Onboarding {
   updatedAt DateTime @updatedAt @db.Timestamptz(6)
 }
 
-model PasswordFailedAttempt {
-  id       String   @id @default(uuid()) @db.Uuid
-  userId   String   @db.Uuid
-  failedAt DateTime @default(now()) @db.Timestamptz(6)
-
-  user Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
 model Profile {
   id              String    @id @default(uuid()) @db.Uuid
   email           String    @unique
@@ -99,7 +91,6 @@ model Profile {
   Transactions     Transaction[]
   VideoProgress    VideoProgress[]
   Favourites       Favourites[]
-  FailedAttempts   PasswordFailedAttempt[]
   Reviews          Review[]
   SupportTickets   SupportTicket[]
   RefundRequests   RefundRequest[]
