@@ -10,6 +10,12 @@
     "format": "biome format --write",
     "prepare": "husky"
   },
+  "browserlist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
     "@prisma/client": "^6.16.2",
