@@ -62,15 +62,6 @@ enum SupportTicketStatus {
   CLOSED
 }
 
-model Onboarding {
-  id        Int      @id @default(autoincrement())
-  email     String
-  password  String
-  otp       Int
-  createdAt DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt DateTime @updatedAt @db.Timestamptz(6)
-}
-
 model Profile {
   id              String    @id @default(uuid()) @db.Uuid
   email           String    @unique
