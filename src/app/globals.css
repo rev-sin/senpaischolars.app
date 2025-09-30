@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #fcf8ef; /* Light purple-tinted white */
+  --background: #fffffc; /* Light purple-tinted white */
   --foreground: oklch(0.15 0.02 240); /* Dark blue text */
   --card: oklch(0.96 0.01 270); /* Light purple card background */
   --card-foreground: oklch(0.15 0.02 240); /* Dark card text */
