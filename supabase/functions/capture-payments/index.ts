@@ -2,7 +2,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { Context, Hono } from "hono";
 import { createClient } from '@supabase/supabase-js';
 
-const functionName = 'create-profile-on-signup'
+const functionName = 'capture-payments'
 const app = new Hono().basePath(`/${functionName}`)
 
 // Auth Hook sends a post request
