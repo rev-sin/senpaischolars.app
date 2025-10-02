@@ -33,7 +33,7 @@ export default function Navbar() {
   const searchId = useId();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background backdrop-blur">
+    <header className="sticky top-0 z-40 w-full bg-background backdrop-blur">
       <div className="h-20 px-6 lg:px-14 flex items-center justify-between">
         <div className="flex items-center gap-10">
           <Link
