@@ -1,0 +1,10 @@
+{
+  "imports": {
+    "hono": "jsr:@hono/hono@^4.4.0",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.43.4",
+    "resend":"npm:resend@4.0.0",
+    "react": "npm:react@18.3.1",
+    "@react-email/components": "npm:@react-email/components@0.0.22",
+    "webhooks": "https://esm.sh/standardwebhooks@1.0.0"
+  }
+}
